@@ -1,0 +1,34 @@
+prepare:
+  image: wise2c/harbor-prepare
+  container_name: wise2c-reg-prepare
+  volumes:
+    - /data:/harbor
+  net: none
+  command: /usr/local/bin/python /root/prepare.py
+  environment:
+    - HOSTNAME=reg.wise2c.com
+    - UI_URL_PROTOCOL=https
+    - EMAIL_SERVER=smtp.mydomain.com
+    - EMAIL_SERVER_PORT=25
+    - EMAIL_USERNAME=sample_admin@mydomain.com
+    - EMAIL_PASSWORD=abc
+    - EMAIL_FROM=admin<sample_admin@mydomain.com>
+    - EMAIL_SSL=false
+    - HARBOR_ADMIN_PASSWORD=Harbor12345
+    - AUTH_MODE=db_auth
+    - LDAP_URL=ldaps://ldap.mydomain.com
+    - LDAP_BASEDN=uid=%s,ou=people,dc=mydomain,dc=com
+    - DB_PASSWORD=root123
+    - SELF_REGISTRATION=on
+    - CUSTOMIZE_CRT=on
+    - CRT_COUNTRY=CN
+    - CRT_STATE=SC
+    - CRT_LOCATION=CD
+    - CRT_ORGANIZATION=WISE2C
+    - CRT_ORGANIZATIONALUNIT=DEVELOP
+    - CRT_COMMONNAME=reg.wise2c.com
+    - CRT_EMAIL=
+    - MAX_JOB_WORKERS=3
+    - VERIFY_REMOTE_CERT=on
+  labels:
+    io.rancher.container.start_once: 'true'
