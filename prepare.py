@@ -41,8 +41,23 @@ ui_secret = ''.join(random.choice(string.ascii_letters+string.digits) for i in r
 base_dir = '/harbor'
 templates_dir = '/root/templates'
 config_dir = os.path.join(base_dir, "config")
+log_dir = os.path.join(base_dir, "log")
+storage_dir = os.path.join(base_dir, "storage")
+database_dir = os.path.join(base_dir, "database")
 crt_file = '/cert/' + hostname + '.crt'
 key_file = '/cert/' + hostname + '.key'
+
+if not os.path.exists(config_dir):
+    os.makedirs(os.path.join(base_dir, "config"))
+
+if not os.path.exists(log_dir):
+    os.makedirs(os.path.join(base_dir, "log"))
+
+if not os.path.exists(storage_dir):
+    os.makedirs(os.path.join(base_dir, "storage"))
+
+if not os.path.exists(database_dir):
+    os.makedirs(os.path.join(base_dir, "database"))
 
 ui_config_dir = os.path.join(config_dir,"ui")
 if not os.path.exists(ui_config_dir):
@@ -199,4 +214,5 @@ if customize_crt == 'on':
 
 FNULL.close()
 print("The configuration files are ready, please use docker-compose to start the service.")
+
 
