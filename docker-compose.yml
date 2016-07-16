@@ -3,6 +3,7 @@ prepare:
   container_name: wise2c-reg-prepare
   volumes:
     - /data:/harbor
+    - /root:/cert
   net: none
   command: /usr/local/bin/python /root/prepare.py
   environment:

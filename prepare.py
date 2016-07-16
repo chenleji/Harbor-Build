@@ -41,6 +41,8 @@ ui_secret = ''.join(random.choice(string.ascii_letters+string.digits) for i in r
 base_dir = '/harbor'
 templates_dir = '/root/templates'
 config_dir = os.path.join(base_dir, "config")
+crt_file = '/cert/' + hostname + '.crt'
+key_file = '/cert/' + hostname + '.key'
 
 ui_config_dir = os.path.join(config_dir,"ui")
 if not os.path.exists(ui_config_dir):
@@ -58,10 +60,18 @@ registry_config_dir = os.path.join(config_dir, "registry")
 if not os.path.exists(registry_config_dir):
     os.makedirs(registry_config_dir)
 
+nginx_config_dir = os.path.join(config_dir, "nginx")
+if not os.path.exists(nginx_config_dir):
+    os.makedirs(nginx_config_dir)
+
+nginx_cert_config_dir = os.path.join(nginx_config_dir, "cert")
+if not os.path.exists(nginx_cert_config_dir):
+    os.makedirs(nginx_cert_config_dir)
+
 def render(src, dest, **kw):
     t = Template(open(src, 'r').read())
     with open(dest, 'w') as f:
-        f.write(t.substitute(**kw))
+        f.write(t.safe_substitute(**kw))
     print("Generated configuration file: %s" % dest)
 
 ui_conf_env = os.path.join(config_dir, "ui", "env")
@@ -69,8 +79,11 @@ ui_conf = os.path.join(config_dir, "ui", "app.conf")
 registry_conf = os.path.join(config_dir, "registry", "config.yml")
 db_conf_env = os.path.join(config_dir, "db", "env")
 job_conf_env = os.path.join(config_dir, "jobservice", "env")
+nginx_conf = os.path.join(config_dir, "nginx", "nginx.conf")
+nginx_cert_crt = os.path.join(config_dir, "nginx", "cert", hostname+'.crt')
+nginx_cert_key = os.path.join(config_dir, "nginx", "cert", hostname+'.key')
 
-conf_files = [ ui_conf, ui_conf_env, registry_conf, db_conf_env, job_conf_env ]
+conf_files = [ ui_conf, ui_conf_env, registry_conf, db_conf_env, job_conf_env, nginx_conf ]
 def rmdir(cf):
     for f in cf:
         if os.path.exists(f):
@@ -87,7 +100,7 @@ render(os.path.join(templates_dir, "ui", "env"),
         harbor_admin_password=harbor_admin_password,
         ldap_url=ldap_url,
         ldap_basedn=ldap_basedn,
-	self_registration=self_registration,
+	    self_registration=self_registration,
         ui_secret=ui_secret,
 		verify_remote_cert=verify_remote_cert)
 
@@ -116,6 +129,20 @@ render(os.path.join(templates_dir, "jobservice", "env"),
         max_job_workers=max_job_workers,
         ui_url=ui_url,
         verify_remote_cert=verify_remote_cert)
+
+if os.getenv('UI_URL_PROTOCOL') == 'https':
+    src_conf = "nginx-https.conf"
+else:
+    src_conf = "nginx-http.conf"
+
+render(os.path.join(templates_dir, "nginx", src_conf),
+        nginx_conf,
+        hostname=hostname)
+
+if os.path.isfile(crt_file): 
+    open(nginx_cert_crt,"wb").write(open(crt_file,"rb").read()) 
+if os.path.isfile(key_file): 
+    open(nginx_cert_key,"wb").write(open(key_file,"rb").read()) 
 
 def validate_crt_subj(dirty_subj):
     subj_list = [item for item in dirty_subj.strip().split("/") \
