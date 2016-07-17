@@ -1,14 +1,14 @@
-MYSQL_HOST=mysql
-MYSQL_PORT=3306
-MYSQL_USR=root
-MYSQL_PWD=$db_password
-UI_SECRET=$ui_secret
-CONFIG_PATH=/etc/jobservice/app.conf
-REGISTRY_URL=http://registry:5000
-VERIFY_REMOTE_CERT=$verify_remote_cert
-MAX_JOB_WORKERS=$max_job_workers
-LOG_LEVEL=debug
-LOG_DIR=/var/log/jobs
-GODEBUG=netdns=cgo
-EXT_ENDPOINT=$ui_url
-TOKEN_URL=http://ui
+export MYSQL_HOST=mysql
+export MYSQL_PORT=3306
+export MYSQL_USR=root
+export MYSQL_PWD=$db_password
+export UI_SECRET=$ui_secret
+export CONFIG_PATH=/etc/jobservice/app.conf
+export REGISTRY_URL=http://registry:5000
+export VERIFY_REMOTE_CERT=$verify_remote_cert
+export MAX_JOB_WORKERS=$max_job_workers
+export LOG_LEVEL=debug
+export LOG_DIR=/var/log/jobs
+export GODEBUG=netdns=cgo
+export EXT_ENDPOINT=$ui_url
+export TOKEN_URL=http://ui

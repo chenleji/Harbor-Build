@@ -154,9 +154,16 @@ render(os.path.join(templates_dir, "nginx", src_conf),
         nginx_conf,
         hostname=hostname)
 
+print("crt_file:%s" % crt_file)
+print("key_file:%s" % key_file)
+print("nginx_cert_crt:%s" % nginx_cert_crt)
+print("nginx_crt_key:%s" % nginx_cert_key)
+
 if os.path.isfile(crt_file): 
+    print("check crt_file")
     open(nginx_cert_crt,"wb").write(open(crt_file,"rb").read()) 
 if os.path.isfile(key_file): 
+    print("check key_file")
     open(nginx_cert_key,"wb").write(open(key_file,"rb").read()) 
 
 def validate_crt_subj(dirty_subj):
