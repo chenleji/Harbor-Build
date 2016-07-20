@@ -44,8 +44,8 @@ config_dir = os.path.join(base_dir, "config")
 log_dir = os.path.join(base_dir, "log")
 storage_dir = os.path.join(base_dir, "storage")
 database_dir = os.path.join(base_dir, "database")
-crt_file = '/cert/' + hostname + '.crt'
-key_file = '/cert/' + hostname + '.key'
+crt_file = base_dir + '/cert/' + hostname + '.crt'
+key_file = base_dir + '/cert/' + hostname + '.key'
 
 if not os.path.exists(config_dir):
     os.makedirs(os.path.join(base_dir, "config"))
@@ -221,5 +221,17 @@ if customize_crt == 'on':
 
 FNULL.close()
 print("The configuration files are ready, please use docker-compose to start the service.")
+
+os.system("echo 'appname = jobservice' >> /harbor/config/jobservice/app.conf")
+os.system("echo 'runmode = dev' >> /harbor/config/jobservice/app.conf")
+os.system("echo '[dev]' >> /harbor/config/jobservice/app.conf")
+os.system("echo 'httpport = 80' >> /harbor/config/jobservice/app.conf")
+
+os.system("cp -rf /harbor/config/ui/* /etc/ui/")
+os.system("cp -rf /harbor/config/registry/* /etc/registry/")
+os.system("cp -rf /harbor/config/jobservice/* /etc/jobservice/")
+os.system("cp -rf /harbor/config/nginx/* /etc/nginx/")
+
+print("##Done##")
 
 
