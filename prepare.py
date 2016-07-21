@@ -49,6 +49,8 @@ key_file = base_dir + '/cert/' + hostname + '.key'
 
 if not os.path.exists(config_dir):
     os.makedirs(os.path.join(base_dir, "config"))
+else:
+    os._exit(0)
 
 if not os.path.exists(log_dir):
     os.makedirs(os.path.join(base_dir, "log"))
